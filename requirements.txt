@@ -1,0 +1,4 @@
+requests
+anthropic
+azure-storage-blob
+python-dotenv
