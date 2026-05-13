@@ -1,4 +1,5 @@
 requests
 anthropic
 azure-storage-blob
-python-dotenvpyodbc
+python-dotenv
+pyodbc
