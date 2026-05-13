@@ -69,8 +69,14 @@ def load_to_azure_sql():
 
     print(f"  Read {len(rows)} rows from SQLite")
 
-    # 2. Connect to Azure SQL
-    conn = get_azure_sql_connection()
+    # 2. Connect to Azure SQL — fail gracefully if blocked
+    try:
+        conn = get_azure_sql_connection()
+    except Exception as e:
+        print(f"  ⚠ Could not connect to Azure SQL: {e}")
+        print("  Skipping Azure SQL load — pipeline continues")
+        return
+
     create_table_if_not_exists(conn)
 
     # 3. Delete today's rows first (safe to re-run)
