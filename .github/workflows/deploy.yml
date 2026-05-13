@@ -23,13 +23,16 @@ jobs:
 
       # 3. Install dependencies
       - name: Install dependencies
-        run: 
-          curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl apt-transport-https
+          curl https://packages.microsoft.com/keys/microsoft.asc | sudo tee /etc/apt/trusted.gpg.d/microsoft.asc
           curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list | sudo tee /etc/apt/sources.list.d/mssql-release.list
           sudo apt-get update
-          sudo ACCEPT_EULA=Y apt-get install -y msodbcsql18
+          sudo ACCEPT_EULA=Y apt-get install -y msodbcsql18 unixodbc-dev
           pip install -r requirements.txt pytest
 
+          
       # 4. Run tests — pipeline stops here if tests fail
       - name: Run tests
         run: pytest tests/ -v
