@@ -79,13 +79,17 @@ def load_to_azure_sql():
 
     create_table_if_not_exists(conn)
 
-    # 3. Delete today's rows first (safe to re-run)
+   # 3. Check if today already exists — skip if so
     cursor = conn.cursor()
     cursor.execute(
-        "DELETE FROM hourly_weather WHERE date = ?",
+         "SELECT COUNT(*) FROM hourly_weather WHERE date = ?",
         (today,)
     )
-    conn.commit()
+    count = cursor.fetchone()[0]
+    if count > 0:
+        print(f"  Data for {today} already exists ({count} rows) — skipping")
+        conn.close()
+        return
 
     # 4. Insert all rows using cursor
     cursor.executemany("""
