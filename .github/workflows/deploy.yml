@@ -5,6 +5,7 @@ on:
     branches: [main]
   schedule:
     - cron: '0 6 * * *'  # runs every day at 6am automatically
+  workflow_dispatch:      # allows manual trigger from GitHub Actions UI
 
 jobs:
   test-and-run:
@@ -32,7 +33,6 @@ jobs:
           sudo ACCEPT_EULA=Y apt-get install -y msodbcsql18 unixodbc-dev
           pip install -r requirements.txt pytest
 
-          
       # 4. Run tests — pipeline stops here if tests fail
       - name: Run tests
         run: pytest tests/ -v
